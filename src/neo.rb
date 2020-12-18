@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # -*- ruby -*-
 
+$VERBOSE = nil
+
 begin
   require 'win32console'
 rescue LoadError
@@ -21,6 +23,10 @@ end
 
 def in_ruby_version(*versions)
   yield if versions.any? { |v| ruby_version?(v) }
+end
+
+def before_ruby_version(version)
+  Gem::Version.new(RUBY_VERSION) < Gem::Version.new(version)
 end
 
 in_ruby_version("1.8") do
@@ -279,7 +285,7 @@ module Neo
         print Color.cyan('_'*(bar_width-1-happy_steps))
       end
       print Color.green(']')
-      print " #{pass_count}/#{total_tests}"
+      print " #{pass_count}/#{total_tests} (#{pass_count*100/total_tests}%)"
       puts
     end
 
